@@ -50,15 +50,6 @@ public abstract class Pessoa implements Serializable{
 		addPerfil(Perfil.CLIENTE);
 	}
 
-	/**
-	 * Instantiates a new pessoa.
-	 *
-	 * @param id the id
-	 * @param nome the nome
-	 * @param cpf the cpf
-	 * @param email the email
-	 * @param senha the senha
-	 */
 	public Pessoa(Integer id, String nome, Integer cpf, String email, String senha) {
 		super();
 		this.id = id;
@@ -69,147 +60,63 @@ public abstract class Pessoa implements Serializable{
 		addPerfil(Perfil.CLIENTE);
 	}
 
-	/**
-	 * Gets the id.
-	 *
-	 * @return the id
-	 */
 	public Integer getId() {
 		return id;
 	}
 
-	/**
-	 * Sets the id.
-	 *
-	 * @param id the new id
-	 */
 	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	/**
-	 * Gets the nome.
-	 *
-	 * @return the nome
-	 */
 	public String getNome() {
 		return nome;
 	}
 
-	/**
-	 * Sets the nome.
-	 *
-	 * @param nome the new nome
-	 */
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
 
-	/**
-	 * Gets the cpf.
-	 *
-	 * @return the cpf
-	 */
 	public Integer getCpf() {
 		return cpf;
 	}
 
-	/**
-	 * Sets the cpf.
-	 *
-	 * @param cpf the new cpf
-	 */
 	public void setCpf(Integer cpf) {
 		this.cpf = cpf;
 	}
 
-	/**
-	 * Gets the email.
-	 *
-	 * @return the email
-	 */
 	public String getEmail() {
 		return email;
 	}
 
-	/**
-	 * Sets the email.
-	 *
-	 * @param email the new email
-	 */
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
 
-	/**
-	 * Gets the senha.
-	 *
-	 * @return the senha
-	 */
 	public String getSenha() {
 		return senha;
 	}
 
-	/**
-	 * Sets the senha.
-	 *
-	 * @param senha the new senha
-	 */
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
 
-	/**
-	 * Gets the perfis.
-	 *
-	 * @return the perfis
-	 */
 	public Set<Perfil> getPerfis() {
 		return perfis.stream().map(x -> Perfil.toEnum(x)).collect(Collectors.toSet());
 	}
 
-	/**
-	 *add a perfil.
-	 *
-	 * @param perfis the new perfis
-	 */
 	public void addPerfil(Perfil perfil) {
 		this.perfis.add(perfil.getCodigo());
 	}
 
-	/**
-	 * Gets the data criacao.
-	 *
-	 * @return the data criacao
-	 */
 	public LocalDate getDataCriacao() {
 		return dataCriacao;
 	}
 
-	/**
-	 * Sets the data criacao.
-	 *
-	 * @param dataCriacao the new data criacao
-	 */
 	public void setDataCriacao(LocalDate dataCriacao) {
 		this.dataCriacao = dataCriacao;
 	}
 
-	
-	
-	/**
-	 * 
-	 * O método equals verifica se dois objetos são "iguais" com base em seus atributos,
-	 * enquanto o hashCode gera um código numérico que representa o objeto,
-	 * permitindo que coleções encontrem objetos de forma rápida.
-	 * 
-	 */
-	
-	/**
-	 * Hash code.
-	 *
-	 * @return the int
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -219,12 +126,6 @@ public abstract class Pessoa implements Serializable{
 		return result;
 	}
 
-	/**
-	 * Equals.
-	 *
-	 * @param obj the obj
-	 * @return true, if successful
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
