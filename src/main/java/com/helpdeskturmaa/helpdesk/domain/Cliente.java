@@ -1,0 +1,33 @@
+package com.helpdeskturmaa.helpdesk.domain;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.OneToMany;
+
+import com.helpdeskturmaa.helpdesk.domain.enums.Perfil;
+
+public class Cliente extends Pessoa{
+
+	private static final long serialVersionUID = 1L;
+
+	@OneToMany(mappedBy = "tecnico")
+	private List<Chamado> chamados = new ArrayList<>();
+	
+	public Cliente() {
+		super();
+	}
+	
+	public Cliente(Integer id, String nome, String cpf, String email, String senha) {
+		super(id, nome, cpf, email, senha);
+		addPerfil(Perfil.CLIENTE);
+	}
+	
+	public List<Chamado> getChamados() {
+		return chamados;
+	}
+
+	public void setChamados(List<Chamado> chamados) {
+		this.chamados = chamados;
+	}
+}

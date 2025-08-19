@@ -9,6 +9,8 @@ import javax.persistence.EnumType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -18,6 +20,11 @@ import com.sun.istack.NotNull;
 
 @Entity
 public class Chamado {
+	
+	
+	@ManyToOne
+	@JoinColumn(name = "tecnico_id")
+	private Tecnico tecnico;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
