@@ -8,13 +8,15 @@ public class HelpdeskturmaaApplication {
 
 
     public static void main(String[] args) {
+    	
+    	
         SpringApplication.run(HelpdeskturmaaApplication.class, args);
-
+        
         System.out.println("**********************************************");
         System.out.println("*                                            *");
         System.out.println("*  APLICAÇÃO HELPDESK INICIADA COM SUCESSO! *");
         System.out.println("*                                            *");
         System.out.println("**********************************************");
+        
     }
-
 }
