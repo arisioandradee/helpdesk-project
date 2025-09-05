@@ -13,7 +13,8 @@ public class TecnicoDTO implements Serializable {
     private String nome;
     private String cpf;
     private String email;
-
+    private String senha;
+    
     public TecnicoDTO() {
         super();
     }
@@ -24,6 +25,7 @@ public class TecnicoDTO implements Serializable {
         this.nome = obj.getNome();
         this.cpf = obj.getCpf();
         this.email = obj.getEmail();
+        this.senha = obj.getSenha();
     }
     
     public Integer getId() {
@@ -57,4 +59,12 @@ public class TecnicoDTO implements Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
+
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
 }

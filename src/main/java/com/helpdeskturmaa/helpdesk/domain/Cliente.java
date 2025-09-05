@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
 import com.helpdeskturmaa.helpdesk.domain.enums.Perfil;
+import com.helpdeskturmaa.helpdesk.dto.ClienteDTO;
 
 @Entity
 public class Cliente extends Pessoa{
@@ -16,6 +17,14 @@ public class Cliente extends Pessoa{
 	@OneToMany(mappedBy = "cliente")
 	private List<Chamado> chamados = new ArrayList<>();
 	
+    public Cliente(ClienteDTO dto) {
+        this.id = dto.getId();
+        this.nome = dto.getNome();
+        this.cpf = dto.getCpf();
+        this.email = dto.getEmail();
+        addPerfil(Perfil.CLIENTE);
+    }
+    
 	public Cliente() {
 		super();
 		addPerfil(Perfil.CLIENTE);

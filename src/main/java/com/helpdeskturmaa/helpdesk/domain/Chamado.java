@@ -16,6 +16,7 @@ import javax.validation.constraints.NotBlank;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.helpdeskturmaa.helpdesk.domain.enums.Prioridade;
 import com.helpdeskturmaa.helpdesk.domain.enums.Status;
+import com.helpdeskturmaa.helpdesk.dto.ChamadoDTO;
 import com.sun.istack.NotNull;
 
 @Entity
@@ -64,6 +65,17 @@ public class Chamado {
         this.observacoes = observacoes;
         this.tecnico = tecnico;
         this.cliente = cliente;
+    }
+    
+    public Chamado(ChamadoDTO dto, Tecnico tecnico, Cliente cliente) {
+        this.id = dto.getId();
+        this.titulo = dto.getTitulo();
+        this.observacoes = dto.getObservacoes();
+        this.prioridade = dto.getPrioridade();
+        this.status = dto.getStatus();
+        this.tecnico = tecnico;
+        this.cliente = cliente;
+        this.dataAbertura = LocalDate.now();
     }
 
     // Getters e Setters
