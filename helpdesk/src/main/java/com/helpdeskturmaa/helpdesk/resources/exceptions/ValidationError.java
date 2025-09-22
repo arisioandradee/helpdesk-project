@@ -1,4 +1,4 @@
-package com.helpdeskturmaa.helpdesk.exceptions;
+package com.helpdeskturmaa.helpdesk.resources.exceptions;
 
 import java.util.ArrayList;
 import java.util.List;

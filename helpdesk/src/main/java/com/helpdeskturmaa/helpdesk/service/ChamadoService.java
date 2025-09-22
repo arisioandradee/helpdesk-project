@@ -11,10 +11,10 @@ import com.helpdeskturmaa.helpdesk.domain.Chamado;
 import com.helpdeskturmaa.helpdesk.domain.Cliente;
 import com.helpdeskturmaa.helpdesk.domain.Tecnico;
 import com.helpdeskturmaa.helpdesk.dto.ChamadoDTO;
-import com.helpdeskturmaa.helpdesk.exceptions.ObjectNotFoundException;
 import com.helpdeskturmaa.helpdesk.repositories.ChamadoRepository;
 import com.helpdeskturmaa.helpdesk.repositories.ClienteRepository;
 import com.helpdeskturmaa.helpdesk.repositories.TecnicoRepository;
+import com.helpdeskturmaa.helpdesk.resources.exceptions.ObjectNotFoundException;
 
 @Service
 public class ChamadoService {

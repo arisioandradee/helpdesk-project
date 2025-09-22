@@ -1,4 +1,4 @@
-package com.helpdeskturmaa.helpdesk.exceptions;
+package com.helpdeskturmaa.helpdesk.resources.exceptions;
 
 import java.io.Serializable;
 

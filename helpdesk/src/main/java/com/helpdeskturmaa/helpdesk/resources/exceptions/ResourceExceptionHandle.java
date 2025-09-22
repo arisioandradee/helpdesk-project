@@ -1,4 +1,4 @@
-package com.helpdeskturmaa.helpdesk.exceptions;
+package com.helpdeskturmaa.helpdesk.resources.exceptions;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -22,5 +22,18 @@ public class ResourceExceptionHandle {
             request.getRequestURI());
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+    
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<StandardError> dataIntegrityViolationException(DataIntegrityViolationException ex, HttpServletRequest request) {
+
+        StandardError error = new StandardError(
+            System.currentTimeMillis(),
+            HttpStatus.BAD_REQUEST.value(),
+            "Erro de Validação",
+            ex.getMessage(),
+            request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 }

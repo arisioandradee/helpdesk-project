@@ -9,8 +9,9 @@ import org.springframework.stereotype.Service;
 
 import com.helpdeskturmaa.helpdesk.domain.Tecnico;
 import com.helpdeskturmaa.helpdesk.dto.TecnicoDTO;
-import com.helpdeskturmaa.helpdesk.exceptions.ObjectNotFoundException;
 import com.helpdeskturmaa.helpdesk.repositories.TecnicoRepository;
+import com.helpdeskturmaa.helpdesk.resources.exceptions.DataIntegrityViolationException;
+import com.helpdeskturmaa.helpdesk.resources.exceptions.ObjectNotFoundException;
 
 @Service
 public class TecnicoService {
@@ -30,12 +31,18 @@ public class TecnicoService {
 
     public Tecnico create(TecnicoDTO dto) {
         dto.setId(null); 
+        validarDados(dto);
         Tecnico newObj = new Tecnico(dto);
         return repository.save(newObj);
     }
 
     public Tecnico update(Integer id, TecnicoDTO dto) {
         Tecnico existing = findById(id);
+        
+        if (!dto.getCpf().equals(existing.getCpf()) || !dto.getEmail().equals(existing.getEmail())) {
+            validarDados(dto); //se for alterado, eu consigo validar
+        }
+        
         existing.setNome(dto.getNome());
         existing.setCpf(dto.getCpf());
         existing.setEmail(dto.getEmail());
@@ -46,4 +53,17 @@ public class TecnicoService {
         findById(id); 
         repository.deleteById(id);
     }
+    
+    private void validarDados(TecnicoDTO dto) {
+        Optional<Tecnico> objCpf = repository.findByCpf(dto.getCpf());
+        if(objCpf.isPresent() && !objCpf.get().getId().equals(dto.getId())) {
+            throw new DataIntegrityViolationException("CPF já cadastrado no sistema!");
+        }
+
+        Optional<Tecnico> objEmail = repository.findByEmail(dto.getEmail());
+        if(objEmail.isPresent() && !objEmail.get().getId().equals(dto.getId())) {
+            throw new DataIntegrityViolationException("E-mail já cadastrado no sistema!");
+        }
+    }
+
 }
