@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder; // 👈 Adição da Importação
 import org.springframework.stereotype.Service;
 
 import com.helpdeskturmaa.helpdesk.domain.Cliente;
@@ -19,6 +20,9 @@ public class ClienteService {
     @Autowired
     private ClienteRepository repository;
 
+    @Autowired
+    private PasswordEncoder encoder;
+
     public Cliente findById(Integer id) {
         Optional<Cliente> obj = repository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Cliente não encontrado! ID: " + id));
@@ -32,6 +36,9 @@ public class ClienteService {
     public Cliente create(ClienteDTO dto) {
         dto.setId(null); 
         validarDados(dto);
+        
+        dto.setSenha(encoder.encode(dto.getSenha())); 
+        
         Cliente newObj = new Cliente(dto); 
         return repository.save(newObj);
     }
@@ -40,12 +47,19 @@ public class ClienteService {
         Cliente existing = findById(id);
         
         if (!dto.getCpf().equals(existing.getCpf()) || !dto.getEmail().equals(existing.getEmail())) {
-            validarDados(dto); //se for alterado, eu consigo validar
+            validarDados(dto); 
+        }
+        
+        if (dto.getSenha() != null && !dto.getSenha().isEmpty()) {
+            existing.setSenha(encoder.encode(dto.getSenha()));
+        } else {
+             dto.setSenha(existing.getSenha());
         }
         
         existing.setNome(dto.getNome());
         existing.setCpf(dto.getCpf());
         existing.setEmail(dto.getEmail());
+        
         return repository.save(existing);
     }
 

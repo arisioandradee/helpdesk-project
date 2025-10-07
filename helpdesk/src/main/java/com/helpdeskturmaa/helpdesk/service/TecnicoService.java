@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.helpdeskturmaa.helpdesk.domain.Tecnico;
@@ -18,6 +19,9 @@ public class TecnicoService {
 
     @Autowired
     private TecnicoRepository repository;
+    
+    @Autowired
+    private PasswordEncoder encoder;
 
     public Tecnico findById(Integer id) {
         Optional<Tecnico> obj = repository.findById(id);
@@ -32,6 +36,9 @@ public class TecnicoService {
     public Tecnico create(TecnicoDTO dto) {
         dto.setId(null); 
         validarDados(dto);
+        
+        dto.setSenha(encoder.encode(dto.getSenha())); 
+        
         Tecnico newObj = new Tecnico(dto);
         return repository.save(newObj);
     }

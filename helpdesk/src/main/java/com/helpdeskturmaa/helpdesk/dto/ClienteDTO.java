@@ -11,6 +11,7 @@ public class ClienteDTO implements Serializable {
     private String nome;
     private String cpf;
     private String email;
+    private String senha;
 
     public ClienteDTO() {
         super();
@@ -54,5 +55,13 @@ public class ClienteDTO implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+    
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 }
