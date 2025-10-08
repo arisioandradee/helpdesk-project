@@ -24,7 +24,7 @@ import com.helpdeskturmaa.helpdesk.security.JWTAuthorizationFilter;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private static final String[] PUBLIC_MATCHES = { "/h2-console/**" , "/clientes/**", "/tecnicos/**", "/login/**" };
+    private static final String[] PUBLIC_MATCHES = { "/h2-console/**" , "/login/**" };
     private static final String[] PUBLIC_MATCHES_GET = { }; 
 
     @Autowired
@@ -48,9 +48,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
 
         http.authorizeRequests()
-        .antMatchers(PUBLIC_MATCHES).permitAll()  
-        .antMatchers("/chamados/**").hasAuthority("ROLE_ADMIN") 
+        // Libera todos os endpoints públicos
+        .antMatchers(PUBLIC_MATCHES).permitAll()
+        
+        // CLIENTE pode CRIAR (POST) chamados
+        // Se a sua role for ROLE_CLIENTE, use hasAuthority.
+        .antMatchers(HttpMethod.POST, "/chamados").hasAnyAuthority("ROLE_CLIENTE", "ROLE_ADMIN", "ROLE_TECNICO")
+        
+        // CLIENTE pode VER (GET) seus chamados.
+        // O Cliente e o Técnico devem conseguir ver chamados.
+        .antMatchers(HttpMethod.GET, "/chamados/**").hasAnyAuthority("ROLE_CLIENTE", "ROLE_ADMIN", "ROLE_TECNICO")
+        
+        // TECNICO e ADMIN podem ATUALIZAR (PUT) e DELETAR (DELETE)
+        .antMatchers(HttpMethod.PUT, "/chamados/**").hasAnyAuthority("ROLE_TECNICO", "ROLE_ADMIN") 
+        .antMatchers(HttpMethod.DELETE, "/chamados/**").hasAuthority("ROLE_ADMIN") 
         .anyRequest().authenticated();
+
+    http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
+    http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
+
+    http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
     http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
