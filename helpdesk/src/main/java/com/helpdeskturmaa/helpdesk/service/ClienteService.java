@@ -62,34 +62,37 @@ public class ClienteService {
         return list.stream().map(ClienteDTO::new).collect(Collectors.toList());
     }
 
-    public Cliente create(ClienteDTO dto) {
-        dto.setId(null); 
-        validarDados(dto);
+    public Cliente create(ClienteDTO objDTO) {
+        objDTO.setId(null); 
+        validarCPFEEmail(objDTO, null); 
         
-        dto.setSenha(encoder.encode(dto.getSenha())); 
-        
-        Cliente newObj = new Cliente(dto); 
+        Cliente newObj = new Cliente(objDTO.getId(), objDTO.getNome(), objDTO.getCpf(), objDTO.getEmail(), encoder.encode(objDTO.getSenha()));
         return repository.save(newObj);
     }
 
     public Cliente update(Integer id, ClienteDTO dto) {
+        dto.setId(id);
         Cliente existing = findById(id);
         
         if (!dto.getCpf().equals(existing.getCpf()) || !dto.getEmail().equals(existing.getEmail())) {
-            validarDados(dto); 
+            validarCPFEEmail(dto, id); 
         }
-        
+
         if (dto.getSenha() != null && !dto.getSenha().isEmpty()) {
             existing.setSenha(encoder.encode(dto.getSenha()));
         } else {
-             dto.setSenha(existing.getSenha());
+            dto.setSenha(existing.getSenha());
         }
-        
+
         existing.setNome(dto.getNome());
         existing.setCpf(dto.getCpf());
         existing.setEmail(dto.getEmail());
         
-        return repository.save(existing);
+        try {
+            return repository.save(existing);
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+             throw new DataIntegrityViolationException("CPF ou Email já cadastrados no sistema.");
+        }
     }
 
     public void delete(Integer id) {
@@ -97,15 +100,15 @@ public class ClienteService {
         repository.deleteById(id);
     }
     
-    private void validarDados(ClienteDTO dto) {
-        Optional<Cliente> objCpf = repository.findByCpf(dto.getCpf());
-        if(objCpf.isPresent() && !objCpf.get().getId().equals(dto.getId())) {
+    private void validarCPFEEmail(ClienteDTO dto, Integer id) {
+        Optional<Cliente> clienteComCpf = repository.findByCpf(dto.getCpf());
+        if (clienteComCpf.isPresent() && !clienteComCpf.get().getId().equals(id)) {
             throw new DataIntegrityViolationException("CPF já cadastrado no sistema!");
         }
 
-        Optional<Cliente> objEmail = repository.findByEmail(dto.getEmail());
-        if(objEmail.isPresent() && !objEmail.get().getId().equals(dto.getId())) {
-            throw new DataIntegrityViolationException("E-mail já cadastrado no sistema!");
+        Optional<Cliente> clienteComEmail = repository.findByEmail(dto.getEmail());
+        if (clienteComEmail.isPresent() && !clienteComEmail.get().getId().equals(id)) {
+            throw new DataIntegrityViolationException("Email já cadastrado no sistema!");
         }
     }
 }

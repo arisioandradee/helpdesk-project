@@ -5,14 +5,17 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.helpdeskturmaa.helpdesk.domain.Tecnico;
 import com.helpdeskturmaa.helpdesk.dto.TecnicoDTO;
 import com.helpdeskturmaa.helpdesk.repositories.TecnicoRepository;
+import com.helpdeskturmaa.helpdesk.resources.exceptions.AuthorizationException;
 import com.helpdeskturmaa.helpdesk.resources.exceptions.DataIntegrityViolationException;
 import com.helpdeskturmaa.helpdesk.resources.exceptions.ObjectNotFoundException;
+import com.helpdeskturmaa.helpdesk.security.UserSS;
 
 @Service
 public class TecnicoService {
@@ -57,6 +60,12 @@ public class TecnicoService {
     }
 
     public void delete(Integer id) {
+        UserSS usuarioLogado = UserService.authenticated();
+
+        if (usuarioLogado == null || !usuarioLogado.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+            throw new AuthorizationException("Acesso negado! Apenas administradores podem deletar técnicos.");
+       }
+
         findById(id); 
         repository.deleteById(id);
     }

@@ -32,13 +32,15 @@ public class DBService {
     	
     	String senhaCriptografada = encoder.encode("123");
     	
+    	Tecnico admin = new Tecnico(null, "admin", "00000000000", "admin@mail.com", senhaCriptografada);
+    	admin.addPerfil(Perfil.ADMIN);
+    	
         Tecnico tec1 = new Tecnico(null, "Bill Gates", "76045777093", "bill@mail.com", senhaCriptografada);
-        tec1.addPerfil(Perfil.ADMIN);
-
+        tec1.addPerfil(Perfil.TECNICO);
         Cliente cli1 = new Cliente(null, "Linus Torvalds", "70511744013", "linus@mail.com", senhaCriptografada);
-
         Chamado cha1 = new Chamado(null, Prioridade.MEDIA, Status.ANDAMENTO, "Chamado 01", "primeiro chamado", tec1, cli1);
 
+        tecnicoRepository.saveAll(Arrays.asList(admin));
         tecnicoRepository.saveAll(Arrays.asList(tec1));
         clienteRepository.saveAll(Arrays.asList(cli1));
         chamadoRepository.saveAll(Arrays.asList(cha1));

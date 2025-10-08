@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.helpdeskturmaa.helpdesk.domain.Tecnico;
@@ -39,12 +40,14 @@ public class TecnicoResource {
         return ResponseEntity.created(uri).body(new TecnicoDTO(newObj));
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')") 
     @PutMapping(value = "/{id}")
     public ResponseEntity<TecnicoDTO> update(@PathVariable Integer id, @RequestBody TecnicoDTO objDTO) {
         Tecnico updatedObj = service.update(id, objDTO);
         return ResponseEntity.ok().body(new TecnicoDTO(updatedObj));
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')") 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         service.delete(id);

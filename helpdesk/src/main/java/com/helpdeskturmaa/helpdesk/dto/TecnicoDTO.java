@@ -1,8 +1,7 @@
 package com.helpdeskturmaa.helpdesk.dto;
 
 import java.io.Serializable;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+	
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.helpdeskturmaa.helpdesk.domain.Tecnico;
 
@@ -12,7 +11,6 @@ public class TecnicoDTO implements Serializable {
 
     private Integer id;
     private String nome;
-    @JsonIgnore 
     private String cpf;
     private String email;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
