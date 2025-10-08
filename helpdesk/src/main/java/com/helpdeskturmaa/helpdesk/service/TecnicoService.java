@@ -63,12 +63,14 @@ public class TecnicoService {
     
     private void validarDados(TecnicoDTO dto) {
         Optional<Tecnico> objCpf = repository.findByCpf(dto.getCpf());
-        if(objCpf.isPresent() && !objCpf.get().getId().equals(dto.getId())) {
+
+        if (objCpf.isPresent() && !objCpf.get().getId().equals(dto.getId())) {
             throw new DataIntegrityViolationException("CPF já cadastrado no sistema!");
         }
 
         Optional<Tecnico> objEmail = repository.findByEmail(dto.getEmail());
-        if(objEmail.isPresent() && !objEmail.get().getId().equals(dto.getId())) {
+
+        if (objEmail.isPresent() && !objEmail.get().getId().equals(dto.getId())) {
             throw new DataIntegrityViolationException("E-mail já cadastrado no sistema!");
         }
     }

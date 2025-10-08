@@ -70,4 +70,11 @@ public class UserSS implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+    
+    public boolean hasRole(String role) {
+        String fullAuthority = "ROLE_" + role; 
+        
+        return getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals(fullAuthority));
+    }
 }

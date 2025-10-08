@@ -17,6 +17,5 @@ public class HelpdeskturmaaApplication {
         System.out.println("*  APLICAÇÃO HELPDESK INICIADA COM SUCESSO! *");
         System.out.println("*                                            *");
         System.out.println("**********************************************");
-        
     }
 }

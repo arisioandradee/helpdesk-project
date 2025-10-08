@@ -44,32 +44,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.cors().and().csrf().disable();
         
+        http.authorizeRequests()
+            .antMatchers(PUBLIC_MATCHES).permitAll()
+
+            // Apenas ADMIN pode criar, atualizar ou deletar clientes.
+            .antMatchers(HttpMethod.POST, "/clientes/**").hasAuthority("ROLE_ADMIN")
+            .antMatchers(HttpMethod.PUT, "/clientes/**").hasAuthority("ROLE_ADMIN")
+            .antMatchers(HttpMethod.DELETE, "/clientes/**").hasAuthority("ROLE_ADMIN")
+            
+            // Apenas ADMIN pode criar, atualizar ou deletar técnicos.
+            .antMatchers(HttpMethod.POST, "/tecnicos/**").hasAuthority("ROLE_ADMIN")
+            .antMatchers(HttpMethod.PUT, "/tecnicos/**").hasAuthority("ROLE_ADMIN")
+            .antMatchers(HttpMethod.DELETE, "/tecnicos/**").hasAuthority("ROLE_ADMIN")
+
+            // REGRAS PARA CHAMADOS
+            .antMatchers(HttpMethod.POST, "/chamados").hasAnyAuthority("ROLE_CLIENTE", "ROLE_ADMIN", "ROLE_TECNICO")
+            .antMatchers(HttpMethod.GET, "/chamados/**").hasAnyAuthority("ROLE_CLIENTE", "ROLE_ADMIN", "ROLE_TECNICO")
+            .antMatchers(HttpMethod.PUT, "/chamados/**").hasAnyAuthority("ROLE_TECNICO", "ROLE_ADMIN") 
+            .antMatchers(HttpMethod.DELETE, "/chamados/**").hasAuthority("ROLE_ADMIN") 
+
+            .anyRequest().authenticated();
+
         http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
         http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
 
-        http.authorizeRequests()
-        // Libera todos os endpoints públicos
-        .antMatchers(PUBLIC_MATCHES).permitAll()
-        
-        // CLIENTE pode CRIAR (POST) chamados
-        // Se a sua role for ROLE_CLIENTE, use hasAuthority.
-        .antMatchers(HttpMethod.POST, "/chamados").hasAnyAuthority("ROLE_CLIENTE", "ROLE_ADMIN", "ROLE_TECNICO")
-        
-        // CLIENTE pode VER (GET) seus chamados.
-        // O Cliente e o Técnico devem conseguir ver chamados.
-        .antMatchers(HttpMethod.GET, "/chamados/**").hasAnyAuthority("ROLE_CLIENTE", "ROLE_ADMIN", "ROLE_TECNICO")
-        
-        // TECNICO e ADMIN podem ATUALIZAR (PUT) e DELETAR (DELETE)
-        .antMatchers(HttpMethod.PUT, "/chamados/**").hasAnyAuthority("ROLE_TECNICO", "ROLE_ADMIN") 
-        .antMatchers(HttpMethod.DELETE, "/chamados/**").hasAuthority("ROLE_ADMIN") 
-        .anyRequest().authenticated();
-
-    http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
-    http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
-
-    http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-    http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
     @Override

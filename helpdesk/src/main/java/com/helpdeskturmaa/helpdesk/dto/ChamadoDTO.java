@@ -13,20 +13,20 @@ public class ChamadoDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Integer id;
-    
+
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataAbertura = LocalDate.now();
-    
+
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataFechamento;
-    
+
     private Prioridade prioridade;
-    
+
     private Status status;
-    
+
     private String titulo;
     private String observacoes;
-    
+
     private Integer tecnico;
     private Integer cliente;
 
@@ -43,7 +43,7 @@ public class ChamadoDTO implements Serializable {
         this.status = obj.getStatus();
         this.titulo = obj.getTitulo();
         this.observacoes = obj.getObservacoes();
-        
+
         if (obj.getTecnico() != null) {
             this.tecnico = obj.getTecnico().getId();
         }
@@ -51,8 +51,7 @@ public class ChamadoDTO implements Serializable {
             this.cliente = obj.getCliente().getId();
         }
     }
-    
-    // Getters e Setters
+
     public Integer getId() {
         return id;
     }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.helpdeskturmaa.helpdesk.domain.Cliente;
@@ -32,6 +33,8 @@ public class ClienteResource {
         return ResponseEntity.ok().body(listDTO);
     }
 
+    // APENAS ADMIN PODE CRIAR CLIENTES
+    @PreAuthorize("hasAnyRole('ADMIN')") 
     @PostMapping
     public ResponseEntity<ClienteDTO> create(@RequestBody ClienteDTO dto) {
         Cliente newObj = service.create(dto);
@@ -39,12 +42,16 @@ public class ClienteResource {
         return ResponseEntity.created(uri).body(new ClienteDTO(newObj));
     }
 
+    // APENAS ADMIN PODE ATUALIZAR OUTROS CLIENTES
+    @PreAuthorize("hasAnyRole('ADMIN')") 
     @PutMapping(value = "/{id}")
     public ResponseEntity<ClienteDTO> update(@PathVariable Integer id, @RequestBody ClienteDTO dto) {
         Cliente updatedObj = service.update(id, dto);
         return ResponseEntity.ok().body(new ClienteDTO(updatedObj));
     }
 
+    // APENAS ADMIN PODE DELETAR CLIENTES
+    @PreAuthorize("hasAnyRole('ADMIN')") 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         service.delete(id);

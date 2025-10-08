@@ -78,8 +78,6 @@ public class Chamado {
         this.dataAbertura = LocalDate.now();
     }
 
-    // Getters e Setters
-
     public Integer getId() {
         return id;
     }

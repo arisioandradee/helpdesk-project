@@ -17,12 +17,17 @@ public class Tecnico extends Pessoa{
 	
 	@OneToMany(mappedBy = "tecnico")
 	private List<Chamado> chamados = new ArrayList<>();
-	
+
     public Tecnico(TecnicoDTO dto) {
+        super(); 
+        
         this.id = dto.getId();
         this.nome = dto.getNome();
         this.cpf = dto.getCpf();
         this.email = dto.getEmail();
+        this.setSenha(dto.getSenha());
+
+        addPerfil(Perfil.TECNICO);
     }
     
 	public Tecnico() {
