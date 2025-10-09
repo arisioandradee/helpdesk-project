@@ -15,19 +15,42 @@ import com.helpdeskturmaa.helpdesk.repositories.TecnicoRepository;
 
 import java.util.Arrays;
 
+/**
+ * Serviço responsável por instanciar e popular o banco de dados com dados iniciais (seeding)
+ * para fins de desenvolvimento e teste.
+ */
 @Service
 public class DBService {
 
+    /**
+     * Injeção do repositório para acesso a dados de Técnico.
+     */
     @Autowired
     private TecnicoRepository tecnicoRepository;
+
+    /**
+     * Injeção do repositório para acesso a dados de Cliente.
+     */
     @Autowired
     private ClienteRepository clienteRepository;
+
+    /**
+     * Injeção do repositório para acesso a dados de Chamado.
+     */
     @Autowired
     private ChamadoRepository chamadoRepository;
     
+    /**
+     * Injeção do codificador de senha (BCryptPasswordEncoder) para criptografia.
+     */
     @Autowired
     private PasswordEncoder encoder;
     
+    /**
+     * Método para popular o banco de dados com entidades iniciais (Técnicos, Clientes e Chamados).
+     * * Cria um usuário ADMIN, um Técnico, um Cliente e um Chamado inicial.
+     * * Criptografa as senhas antes de persistir.
+     */
     public void instanciaDB() {
     	
     	String senhaCriptografada = encoder.encode("123");

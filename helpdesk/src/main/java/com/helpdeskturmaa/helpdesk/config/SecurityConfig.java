@@ -22,22 +22,56 @@ import com.helpdeskturmaa.helpdesk.security.JWTAuthenticationFilter;
 import com.helpdeskturmaa.helpdesk.security.JWTUtil;
 import com.helpdeskturmaa.helpdesk.security.JWTAuthorizationFilter;
 
+/**
+ * Classe de configuração de segurança da aplicação, utilizando Spring Security e
+ * JSON Web Tokens (JWT) para autenticação e autorização.
+ * * Configura o acesso a diferentes endpoints baseados em perfis de usuário
+ * (Admin, Cliente, Técnico) e define a política de sessão como STATELESS.
+ */
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    /**
+     * Array de endpoints públicos que não exigem autenticação.
+     */
     private static final String[] PUBLIC_MATCHES = { "/h2-console/**" , "/login/**" };
+
+    /**
+     * Array de endpoints públicos acessíveis apenas via método GET.
+     * Atualmente vazio.
+     */
     private static final String[] PUBLIC_MATCHES_GET = { }; 
 
+    /**
+     * Injeção do ambiente Spring para verificar o perfil ativo (ex: "test").
+     */
     @Autowired
     private Environment env;
 
+    /**
+     * Injeção do utilitário JWT para manipulação de tokens.
+     */
     @Autowired
     private JWTUtil jwtUtil;
 
+    /**
+     * Serviço para carregar dados do usuário no contexto de segurança.
+     */
     @Autowired
     private UserDetailsService userDetailsService;
 
+    /**
+     * Configura as regras de autorização de acesso HTTP e os filtros de segurança.
+     * * 1. Habilita o console H2 em perfil de teste.
+     * 2. Habilita CORS e desabilita CSRF.
+     * 3. Define regras de autorização para os endpoints.
+     * 4. Adiciona os filtros de Autenticação (Login) e Autorização (JWT).
+     * 5. Define a política de sessão como STATELESS.
+     *
+     * @param http o objeto HttpSecurity para configuração.
+     * @throws Exception se ocorrer um erro durante a configuração.
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         if (Arrays.asList(env.getActiveProfiles()).contains("test")) {
@@ -73,11 +107,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
+    /**
+     * Configura o provedor de autenticação, definindo o UserDetailsService
+     * e o codificador de senha a serem utilizados.
+     *
+     * @param auth o objeto AuthenticationManagerBuilder para configuração.
+     * @throws Exception se ocorrer um erro durante a configuração.
+     */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
     }
 
+    /**
+     * Define a configuração de CORS (Cross-Origin Resource Sharing), permitindo
+     * requisições de diferentes origens e métodos HTTP (POST, GET, PUT, DELETE, OPTIONS).
+     *
+     * @return a fonte de configuração CORS para ser usada pelo Spring Security.
+     */
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
 
@@ -88,6 +135,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 
+    /**
+     * Cria e expõe o bean BCryptPasswordEncoder para codificação de senhas.
+     *
+     * @return uma instância de BCryptPasswordEncoder.
+     */
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
