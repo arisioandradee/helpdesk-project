@@ -1,6 +1,9 @@
 package com.helpdeskturmaa.helpdesk.security;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -18,12 +21,21 @@ public class JWTUtil {
     @Value("${jwt.secret}")
     private String secret;
 
-    public String generateToken(String email) {
+    // NOVO — recebendo o objeto UserSS para extrair as roles
+    public String generateToken(UserSS user) {
+
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("roles", user.getAuthorities()
+                .stream()
+                .map(a -> a.getAuthority())
+                .collect(Collectors.toList()));
+
         return Jwts.builder()
-                   .setSubject(email)
-                   .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                   .signWith(SignatureAlgorithm.HS512, secret.getBytes())
-                   .compact();
+                .setClaims(claims)
+                .setSubject(user.getUsername())
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(SignatureAlgorithm.HS512, secret.getBytes())
+                .compact();
     }
 
     public boolean tokenValido(String token) {
@@ -32,10 +44,7 @@ public class JWTUtil {
             String username = claims.getSubject();
             Date expirationDate = claims.getExpiration();
             Date now = new Date(System.currentTimeMillis());
-
-            if (username != null && expirationDate != null && now.before(expirationDate)) {
-                return true;
-            }
+            return (username != null && expirationDate != null && now.before(expirationDate));
         }
         return false;
     }
