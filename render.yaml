@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: helpdesk
+    env: java
+    plan: free
+    branch: main
+    rootDir: helpdesk
+    buildCommand: |
+      chmod +x mvnw
+      ./mvnw clean package -DskipTests
+    startCommand: java -jar target/*.jar
+    envVars:
+      - key: JAVA_VERSION
+        value: 17
+      - key: DATABASE_URL
+        fromService:
+          name: helpdesk-db
+          property: connectionString
+      - key: DATABASE_USERNAME
+        fromService:
+          name: helpdesk-db
+          property: user
+      - key: DATABASE_PASSWORD
+        fromService:
+          name: helpdesk-db
+          property: password
+
+databases:
+  - name: helpdesk-db
+    plan: free
+    region: oregon
