@@ -4,13 +4,16 @@ FROM maven:3.9.6-eclipse-temurin-21-alpine AS build
 # Define o diretório de trabalho dentro do container de build
 WORKDIR /app
 
-# Copia o pom.xml e faz o download das dependências
+# COPIA TUDO antes de fazer o build
 COPY pom.xml .
-RUN mvn dependency:go-offline package -DskipTests
-
-# Copia todo o código-fonte restante e faz o build final
 COPY src ./src
+
+# Executa o build (compila, empacota), pulando os testes
 RUN mvn clean package -DskipTests
+
+# Estágio 2: Criação da Imagem Executável (RESTANTE DO ARQUIVO)
+FROM eclipse-temurin:21-jre-alpine
+# ... (deixe o restante como estava)
 
 # Estágio 2: Criação da Imagem Executável
 # Usa uma base Java JRE leve (ideal para containers)
